@@ -4,7 +4,7 @@
 #
 Name     : arpack-ng
 Version  : 3.7.0
-Release  : 1
+Release  : 2
 URL      : https://github.com/opencollab/arpack-ng/archive/3.7.0.tar.gz
 Source0  : https://github.com/opencollab/arpack-ng/archive/3.7.0.tar.gz
 Summary  : Collection of Fortran77 subroutines designed to solve large scale eigenvalue problems
@@ -69,13 +69,44 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1560524437
+export SOURCE_DATE_EPOCH=1560524675
 mkdir -p clr-build
 pushd clr-build
-export CFLAGS="$CFLAGS -fno-lto "
-export FCFLAGS="$CFLAGS -fno-lto "
-export FFLAGS="$CFLAGS -fno-lto "
-export CXXFLAGS="$CXXFLAGS -fno-lto "
+export AR=gcc-ar
+export RANLIB=gcc-ranlib
+export NM=gcc-nm
+export CFLAGS="$CFLAGS -O3 -falign-functions=32 -ffat-lto-objects -flto=4 -fno-math-errno -fno-semantic-interposition -fno-trapping-math "
+export FCFLAGS="$CFLAGS -O3 -falign-functions=32 -ffat-lto-objects -flto=4 -fno-math-errno -fno-semantic-interposition -fno-trapping-math "
+export FFLAGS="$CFLAGS -O3 -falign-functions=32 -ffat-lto-objects -flto=4 -fno-math-errno -fno-semantic-interposition -fno-trapping-math "
+export CXXFLAGS="$CXXFLAGS -O3 -falign-functions=32 -ffat-lto-objects -flto=4 -fno-math-errno -fno-semantic-interposition -fno-trapping-math "
+%cmake ..
+make  %{?_smp_mflags}
+popd
+mkdir -p clr-build-avx2
+pushd clr-build-avx2
+export AR=gcc-ar
+export RANLIB=gcc-ranlib
+export NM=gcc-nm
+export CFLAGS="$CFLAGS -O3 -falign-functions=32 -ffat-lto-objects -flto=4 -fno-math-errno -fno-semantic-interposition -fno-trapping-math -march=haswell "
+export FCFLAGS="$CFLAGS -O3 -falign-functions=32 -ffat-lto-objects -flto=4 -fno-math-errno -fno-semantic-interposition -fno-trapping-math -march=haswell "
+export FFLAGS="$CFLAGS -O3 -falign-functions=32 -ffat-lto-objects -flto=4 -fno-math-errno -fno-semantic-interposition -fno-trapping-math -march=haswell "
+export CXXFLAGS="$CXXFLAGS -O3 -falign-functions=32 -ffat-lto-objects -flto=4 -fno-math-errno -fno-semantic-interposition -fno-trapping-math -march=haswell "
+export CFLAGS="$CFLAGS -march=haswell -m64"
+export CXXFLAGS="$CXXFLAGS -march=haswell -m64"
+%cmake ..
+make  %{?_smp_mflags}
+popd
+mkdir -p clr-build-avx512
+pushd clr-build-avx512
+export AR=gcc-ar
+export RANLIB=gcc-ranlib
+export NM=gcc-nm
+export CFLAGS="$CFLAGS -O3 -falign-functions=32 -ffat-lto-objects -flto=4 -fno-math-errno -fno-semantic-interposition -fno-trapping-math -march=skylake-avx512 "
+export FCFLAGS="$CFLAGS -O3 -falign-functions=32 -ffat-lto-objects -flto=4 -fno-math-errno -fno-semantic-interposition -fno-trapping-math -march=skylake-avx512 "
+export FFLAGS="$CFLAGS -O3 -falign-functions=32 -ffat-lto-objects -flto=4 -fno-math-errno -fno-semantic-interposition -fno-trapping-math -march=skylake-avx512 "
+export CXXFLAGS="$CXXFLAGS -O3 -falign-functions=32 -ffat-lto-objects -flto=4 -fno-math-errno -fno-semantic-interposition -fno-trapping-math -march=skylake-avx512 "
+export CFLAGS="$CFLAGS -march=skylake-avx512 -m64 "
+export CXXFLAGS="$CXXFLAGS -march=skylake-avx512 -m64 "
 %cmake ..
 make  %{?_smp_mflags}
 popd
@@ -86,12 +117,22 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 cd clr-build; make test
+cd ../clr-build-avx2;
+make test || :
+cd ../clr-build-avx512;
+make test || :
 
 %install
-export SOURCE_DATE_EPOCH=1560524437
+export SOURCE_DATE_EPOCH=1560524675
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/arpack-ng
 cp COPYING %{buildroot}/usr/share/package-licenses/arpack-ng/COPYING
+pushd clr-build-avx512
+%make_install_avx512  || :
+popd
+pushd clr-build-avx2
+%make_install_avx2  || :
+popd
 pushd clr-build
 %make_install
 popd
@@ -106,10 +147,16 @@ popd
 /usr/include/arpack/stat.h
 /usr/lib/cmake/arpack-ng-config-version.cmake
 /usr/lib/cmake/arpack-ng-config.cmake
+/usr/lib64/haswell/avx512_1/libarpack.so
+/usr/lib64/haswell/libarpack.so
 /usr/lib64/libarpack.so
 
 %files lib
 %defattr(-,root,root,-)
+/usr/lib64/haswell/avx512_1/libarpack.so.2
+/usr/lib64/haswell/avx512_1/libarpack.so.2.1.0
+/usr/lib64/haswell/libarpack.so.2
+/usr/lib64/haswell/libarpack.so.2.1.0
 /usr/lib64/libarpack.so.2
 /usr/lib64/libarpack.so.2.1.0
 
