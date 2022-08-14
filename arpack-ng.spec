@@ -4,7 +4,7 @@
 #
 Name     : arpack-ng
 Version  : 3.8.0
-Release  : 13
+Release  : 14
 URL      : https://github.com/opencollab/arpack-ng/archive/3.8.0/arpack-ng-3.8.0.tar.gz
 Source0  : https://github.com/opencollab/arpack-ng/archive/3.8.0/arpack-ng-3.8.0.tar.gz
 Summary  : Collection of Fortran77 subroutines designed to solve large scale eigenvalue problems
