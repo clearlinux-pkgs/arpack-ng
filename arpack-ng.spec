@@ -5,7 +5,7 @@
 #
 Name     : arpack-ng
 Version  : 3.9.0
-Release  : 22
+Release  : 23
 URL      : https://github.com/opencollab/arpack-ng/archive/3.9.0/arpack-ng-3.9.0.tar.gz
 Source0  : https://github.com/opencollab/arpack-ng/archive/3.9.0/arpack-ng-3.9.0.tar.gz
 Summary  : Collection of Fortran77 subroutines designed to solve large scale eigenvalue problems
@@ -77,7 +77,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1682641282
+export SOURCE_DATE_EPOCH=1682700532
 mkdir -p clr-build
 pushd clr-build
 export GCC_IGNORE_WERROR=1
@@ -138,7 +138,7 @@ cd ../clr-build-avx512;
 make test || :
 
 %install
-export SOURCE_DATE_EPOCH=1682641282
+export SOURCE_DATE_EPOCH=1682700532
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/arpack-ng
 cp %{_builddir}/arpack-ng-%{version}/COPYING %{buildroot}/usr/share/package-licenses/arpack-ng/a8322a2036b23080e6706a894c314b9f477dce58 || :
@@ -159,6 +159,8 @@ popd
 
 %files dev
 %defattr(-,root,root,-)
+/V3/usr/lib64/libarpack.so
+/V4/usr/lib64/libarpack.so
 /usr/include/arpack-ng/arpackdef.h
 /usr/include/arpack-ng/arpackicb.h
 /usr/include/arpack-ng/debug.h
@@ -169,17 +171,15 @@ popd
 /usr/lib64/cmake/arpackng/arpackng-config.cmake
 /usr/lib64/cmake/arpackng/arpackngTargets-relwithdebinfo.cmake
 /usr/lib64/cmake/arpackng/arpackngTargets.cmake
-/usr/lib64/glibc-hwcaps/x86-64-v3/libarpack.so
-/usr/lib64/glibc-hwcaps/x86-64-v4/libarpack.so
 /usr/lib64/libarpack.so
 /usr/lib64/pkgconfig/arpack.pc
 
 %files lib
 %defattr(-,root,root,-)
-/usr/lib64/glibc-hwcaps/x86-64-v3/libarpack.so.2
-/usr/lib64/glibc-hwcaps/x86-64-v3/libarpack.so.2.1.0
-/usr/lib64/glibc-hwcaps/x86-64-v4/libarpack.so.2
-/usr/lib64/glibc-hwcaps/x86-64-v4/libarpack.so.2.1.0
+/V3/usr/lib64/libarpack.so.2
+/V3/usr/lib64/libarpack.so.2.1.0
+/V4/usr/lib64/libarpack.so.2
+/V4/usr/lib64/libarpack.so.2.1.0
 /usr/lib64/libarpack.so.2
 /usr/lib64/libarpack.so.2.1.0
 
